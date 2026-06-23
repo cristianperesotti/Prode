@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prode Mundial 2026</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+    background:#f5f5f5;
+}
+
+h1,h2{
+    text-align:center;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+    box-shadow:0 0 5px rgba(0,0,0,.15);
+}
+
+input{
+    padding:8px;
+    margin:5px;
+}
+
+button{
+    padding:8px 15px;
+    cursor:pointer;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+    text-align:center;
+}
+
+th{
+    background:#1976d2;
+    color:white;
+}
+
+.posiciones tr:nth-child(even){
+    background:#f0f0f0;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏆 PRODE MUNDIAL 2026</h1>
+
+<div class="card">
+<h2>Jugadores</h2>
+
+<input id="jugadorNombre" placeholder="Nombre jugador">
+<button onclick="agregarJugador()">Agregar</button>
+
+<ul id="listaJugadores"></ul>
+</div>
+
+<div class="card">
+<h2>Agregar Partido</h2>
+
+<input id="local" placeholder="Equipo Local">
+<input id="visitante" placeholder="Equipo Visitante">
+
+<button onclick="agregarPartido()">Agregar Partido</button>
+</div>
+
+<div class="card">
+<h2>Partidos</h2>
+<div id="partidos"></div>
+</div>
+
+<div class="card">
+<h2>Tabla de Posiciones</h2>
+
+<table class="posiciones">
+<thead>
+<tr>
+<th>Pos</th>
+<th>Jugador</th>
+<th>Puntos</th>
+</tr>
+</thead>
+<tbody id="tablaPosiciones"></tbody>
+</table>
+
+</div>
+
+<script>
+
+let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
+let partidos = JSON.parse(localStorage.getItem("partidos")) || [];
+
+function guardar(){
+    localStorage.setItem("jugadores",JSON.stringify(jugadores));
+    localStorage.setItem("partidos",JSON.stringify(partidos));
+}
+
+function agregarJugador(){
+
+    let nombre = document.getElementById("jugadorNombre").value.trim();
+
+    if(!nombre) return;
+
+    jugadores.push({
+        nombre:nombre
+    });
+
+    document.getElementById("jugadorNombre").value="";
+
+    guardar();
+    render();
+}
+
+function agregarPartido(){
+
+    let local = document.getElementById("local").value.trim();
+    let visitante = document.getElementById("visitante").value.trim();
+
+    if(!local || !visitante) return;
+
+    partidos.push({
+        local,
+        visitante,
+        gl:"",
+        gv:"",
+        pronosticos:{}
+    });
+
+    document.getElementById("local").value="";
+    document.getElementById("visitante").value="";
+
+    guardar();
+    render();
+}
+
+function calcularPuntos(pronGL,pronGV,realGL,realGV){
+
+    if(realGL==="" || realGV==="")
+        return 0;
+
+    pronGL = Number(pronGL);
+    pronGV = Number(pronGV);
+
+    realGL = Number(realGL);
+    realGV = Number(realGV);
+
+    if(pronGL===realGL && pronGV===realGV)
+        return 6;
+
+    let signoPron =
+        pronGL > pronGV ? "L" :
+        pronGL < pronGV ? "V" : "E";
+
+    let signoReal =
+        realGL > realGV ? "L" :
+        realGL < realGV ? "V" : "E";
+
+    return signoPron===signoReal ? 3 : 0;
+}
+
+function render(){
+
+    document.getElementById("listaJugadores").innerHTML =
+        jugadores.map(j=>`<li>${j.nombre}</li>`).join("");
+
+    let html="";
+
+    partidos.forEach((p,index)=>{
+
+        html += `
+        <div style="border:1px solid #ccc;padding:10px;margin-bottom:10px;">
+        <h3>${p.local} vs ${p.visitante}</h3>
+
+        Resultado Real:
+        <input type="number" value="${p.gl}" style="width:60px"
+        onchange="partidos[${index}].gl=this.value;guardar();render()">
+
+        -
+
+        <input type="number" value="${p.gv}" style="width:60px"
+        onchange="partidos[${index}].gv=this.value;guardar();render()">
+
+        <hr>
+        `;
+
+        jugadores.forEach(j=>{
+
+            let pr = p.pronosticos[j.nombre] || {gl:"",gv:""};
+
+            html += `
+            <div>
+            <strong>${j.nombre}</strong>
+
+            <input type="number" value="${pr.gl}"
+            style="width:60px"
+            onchange="
+            if(!partidos[${index}].pronosticos['${j.nombre}'])
+            partidos[${index}].pronosticos['${j.nombre}']={};
+
+            partidos[${index}].pronosticos['${j.nombre}'].gl=this.value;
+            guardar();render();
+            ">
+
+            -
+
+            <input type="number" value="${pr.gv}"
+            style="width:60px"
+            onchange="
+            if(!partidos[${index}].pronosticos['${j.nombre}'])
+            partidos[${index}].pronosticos['${j.nombre}']={};
+
+            partidos[${index}].pronosticos['${j.nombre}'].gv=this.value;
+            guardar();render();
+            ">
+
+            Puntos:
+            ${
+                calcularPuntos(
+                    pr.gl,
+                    pr.gv,
+                    p.gl,
+                    p.gv
+                )
+            }
+            </div>
+            `;
+        });
+
+        html += "</div>";
+    });
+
+    document.getElementById("partidos").innerHTML = html;
+
+    let ranking = jugadores.map(j=>{
+
+        let total = 0;
+
+        partidos.forEach(p=>{
+
+            let pr = p.pronosticos[j.nombre];
+
+            if(pr){
+
+                total += calcularPuntos(
+                    pr.gl,
+                    pr.gv,
+                    p.gl,
+                    p.gv
+                );
+            }
+        });
+
+        return {
+            nombre:j.nombre,
+            puntos:total
+        };
+    });
+
+    ranking.sort((a,b)=>b.puntos-a.puntos);
+
+    document.getElementById("tablaPosiciones").innerHTML =
+    ranking.map((j,i)=>`
+    <tr>
+        <td>${i+1}</td>
+        <td>${j.nombre}</td>
+        <td>${j.puntos}</td>
+    </tr>
+    `).join("");
+}
+
+render();
+
+</script>
+
+</body>
+</html>
