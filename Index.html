@@ -292,10 +292,10 @@ function fechaLinda(fecha, hora){
 
 function calcularPuntos(predA, predB, realA, realB){
   if(realA === null || realB === null || predA === undefined || predB === undefined) return null;
-  if(predA === realA && predB === realB) return 3;
+  if(predA === realA && predB === realB) return 6;
   const signoPred = Math.sign(predA - predB);
   const signoReal = Math.sign(realA - realB);
-  if(signoPred === signoReal) return 1;
+  if(signoPred === signoReal) return 3;
   return 0;
 }
 
@@ -355,7 +355,7 @@ function partidoCard(p, modo){
     } else if(tieneResultado){
       const pred = (predicciones[p.id] && predicciones[p.id][jugadorSeleccionado]) || null;
       const pts = pred ? calcularPuntos(pred.a, pred.b, p.realA, p.realB) : null;
-      const tagClass = pts === 3 ? 'p3' : pts === 1 ? 'p1' : 'p0';
+      const tagClass = pts === 6 ? 'p3' : pts === 3 ? 'p1' : 'p0';
       cuerpo = `
         <div class="resultado-real">${p.realA} - ${p.realB}</div>
         <div class="pred-locked">
@@ -448,7 +448,7 @@ function renderPredicciones(){
       ${bloques}
     </div>
     <div class="card">
-      <p class="reglas">🎯 <b>3 puntos</b> por acertar el resultado exacto.<br>✅ <b>1 punto</b> por acertar quién gana (o el empate) sin el marcador justo.<br>❌ <b>0 puntos</b> si no acertás ni el resultado.</p>
+      <p class="reglas">🎯 <b>6 puntos</b> por acertar el resultado exacto.<br>✅ <b>3 puntos</b> por acertar quién gana (o el empate) sin el marcador justo.<br>❌ <b>0 puntos</b> si no acertás nada.</p>
     </div>`;
 }
 
@@ -464,7 +464,7 @@ function renderPosiciones(){
       if(!pred) return;
       jugados++;
       const r = calcularPuntos(pred.a, pred.b, p.realA, p.realB);
-      if(r === 3) exactos++;
+      if(r === 6) exactos++;
       pts += r;
     });
     return {nombre:j.nombre, pts, exactos, jugados};
