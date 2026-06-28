@@ -4,290 +4,590 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prode Mundial 2026</title>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{
-    font-family: Arial, sans-serif;
-    max-width:1200px;
-    margin:auto;
-    padding:20px;
-    background:#f5f5f5;
-}
-
-h1,h2{
+  :root{
+    --verde-cancha:#0b3d2e;
+    --verde-oscuro:#06241a;
+    --verde-linea:#145c3f;
+    --dorado:#c9a227;
+    --dorado-claro:#e8c547;
+    --crema:#faf7ef;
+    --texto:#1a2e22;
+    --texto-claro:#6b7a70;
+    --rojo:#c0392b;
+    --gris-borde:#e3ded0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:'Inter',sans-serif;
+    max-width:720px;
+    margin:0 auto;
+    padding:0 14px 60px;
+    background:
+      linear-gradient(180deg, var(--verde-oscuro) 0%, var(--verde-cancha) 220px, #f2efe4 220px, #f2efe4 100%);
+    color:var(--texto);
+  }
+  header{
+    padding:28px 6px 18px;
     text-align:center;
-}
-
-.card{
-    background:white;
-    padding:15px;
+    color:var(--crema);
+  }
+  header h1{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:38px;
+    letter-spacing:1.5px;
+    margin:0 0 4px;
+    color:var(--dorado-claro);
+    text-shadow:0 2px 0 rgba(0,0,0,.25);
+  }
+  header p{
+    margin:0;
+    font-size:13px;
+    color:#cfe3d8;
+    letter-spacing:.3px;
+  }
+  nav{
+    display:flex;
+    gap:6px;
+    margin:0 0 18px;
+    overflow-x:auto;
+    padding-bottom:2px;
+  }
+  nav button{
+    flex:1;
+    white-space:nowrap;
+    background:rgba(255,255,255,.12);
+    color:var(--crema);
+    border:1px solid rgba(255,255,255,.25);
     border-radius:10px;
-    margin-bottom:20px;
-    box-shadow:0 0 5px rgba(0,0,0,.15);
-}
-
-input{
-    padding:8px;
-    margin:5px;
-}
-
-button{
-    padding:8px 15px;
+    padding:10px 8px;
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:13px;
     cursor:pointer;
-}
+    transition:.15s;
+  }
+  nav button.active{
+    background:var(--dorado-claro);
+    color:var(--verde-oscuro);
+    border-color:var(--dorado-claro);
+  }
+  .tab{display:none;}
+  .tab.active{display:block;animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+  .card{
+    background:#fff;
+    padding:16px;
+    border-radius:14px;
+    margin-bottom:14px;
+    box-shadow:0 2px 10px rgba(0,0,0,.06);
+    border:1px solid var(--gris-borde);
+  }
+  .card h2{
+    font-family:'Bebas Neue',sans-serif;
+    font-size:20px;
+    letter-spacing:.5px;
+    margin:0 0 12px;
+    color:var(--verde-cancha);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  input,select{
+    padding:9px 10px;
+    border:1px solid var(--gris-borde);
+    border-radius:8px;
+    font-size:14px;
+    font-family:'Inter',sans-serif;
+    background:#fcfbf8;
+  }
+  input:focus,select:focus{outline:2px solid var(--dorado);outline-offset:1px;}
+  button.btn{
+    padding:9px 16px;
+    border-radius:8px;
+    border:none;
+    background:var(--verde-cancha);
+    color:#fff;
+    font-weight:600;
+    font-size:13px;
+    cursor:pointer;
+  }
+  button.btn:hover{background:var(--verde-linea);}
+  button.btn.dorado{background:var(--dorado);color:var(--verde-oscuro);}
+  button.btn.rojo{background:var(--rojo);}
+  button.btn.chico{padding:6px 10px;font-size:12px;}
+  .fila-form{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px;}
+  .fila-form input{flex:1;min-width:120px;}
 
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:10px;
-}
+  .jugador-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:9px 10px;border-radius:8px;background:var(--crema);margin-bottom:6px;
+    font-weight:600;
+  }
+  .jugador-item .quitar{background:none;border:none;color:var(--rojo);font-size:18px;cursor:pointer;line-height:1;}
 
-th,td{
-    border:1px solid #ddd;
-    padding:8px;
-    text-align:center;
-}
+  details.fase-group{margin-bottom:10px;border:1px solid var(--gris-borde);border-radius:10px;overflow:hidden;}
+  details.fase-group summary{
+    list-style:none;cursor:pointer;padding:10px 12px;
+    font-family:'Bebas Neue',sans-serif;letter-spacing:.5px;font-size:15px;
+    background:var(--verde-cancha);color:#fff;display:flex;align-items:center;justify-content:space-between;
+  }
+  details.fase-group summary::-webkit-details-marker{display:none;}
+  details.fase-group[open] summary::after{content:'▲';font-size:10px;}
+  details.fase-group summary::after{content:'▼';font-size:10px;}
+  .fase-body{padding:10px;background:#fcfbf8;}
 
-th{
-    background:#1976d2;
-    color:white;
-}
+  .partido{
+    border:1px solid var(--gris-borde);border-radius:10px;padding:10px;margin-bottom:8px;background:#fff;
+  }
+  .partido.finalizado{border-color:var(--dorado);background:#fffaf0;}
+  .partido-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--texto-claro);margin-bottom:6px;}
+  .estado{font-weight:700;padding:2px 8px;border-radius:20px;font-size:10px;letter-spacing:.3px;}
+  .estado.pendiente{background:#ece7d8;color:var(--texto-claro);}
+  .estado.finalizado{background:var(--dorado);color:var(--verde-oscuro);}
+  .equipos{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:15px;margin:6px 0;}
+  .equipos .vs{color:var(--texto-claro);font-weight:400;font-size:12px;}
+  .resultado-input{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;}
+  .resultado-input input{width:48px;text-align:center;font-weight:700;}
+  .resultado-real{
+    text-align:center;font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--verde-cancha);margin:4px 0;
+  }
+  .acciones-partido{display:flex;justify-content:center;gap:8px;margin-top:8px;}
+  .pred-locked{text-align:center;font-size:12px;color:var(--texto-claro);margin-top:6px;}
+  .pts-tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;}
+  .pts-tag.p3{background:#1f9d55;color:#fff;}
+  .pts-tag.p1{background:#d4a017;color:#fff;}
+  .pts-tag.p0{background:#cfc9b8;color:var(--texto-claro);}
 
-.posiciones tr:nth-child(even){
-    background:#f0f0f0;
-}
+  table{width:100%;border-collapse:collapse;margin-top:6px;}
+  th,td{border:1px solid var(--gris-borde);padding:8px 6px;text-align:center;font-size:13px;}
+  th{background:var(--verde-cancha);color:#fff;font-family:'Bebas Neue',sans-serif;letter-spacing:.3px;}
+  tbody tr:nth-child(even){background:var(--crema);}
+  tbody tr:first-child td{font-weight:800;color:var(--verde-cancha);}
+  .puesto1{background:#fff7e0 !important;}
+
+  .vacio{text-align:center;color:var(--texto-claro);font-size:13px;padding:16px 0;}
+  .reglas{font-size:12px;color:var(--texto-claro);line-height:1.5;background:var(--crema);padding:10px;border-radius:8px;}
+  .toast{
+    position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+    background:var(--verde-oscuro);color:#fff;padding:9px 18px;border-radius:30px;font-size:13px;
+    opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;
+  }
+  .toast.show{opacity:1;}
+  .loading{text-align:center;color:#cfe3d8;padding:40px 0;}
+  select#selJugadorPred{width:100%;margin-bottom:14px;font-weight:600;}
+  .nota-share{font-size:11px;color:var(--texto-claro);text-align:center;margin-top:-6px;margin-bottom:14px;}
 </style>
 </head>
-
 <body>
 
-<h1>🏆 PRODE MUNDIAL 2026</h1>
+<header>
+  <h1>🏆 PRODE MUNDIAL 2026</h1>
+  <p>Predicciones en familia · Dieciseisavos en adelante</p>
+</header>
+<p class="nota-share">⚠️ Los datos de este prode se guardan compartidos: cualquiera con el link los ve y puede editarlos.</p>
 
-<div class="card">
-<h2>Jugadores</h2>
+<nav>
+  <button class="tab-btn active" data-tab="jugadores">👥 Jugadores</button>
+  <button class="tab-btn" data-tab="partidos">⚽ Partidos</button>
+  <button class="tab-btn" data-tab="predicciones">🎯 Predicciones</button>
+  <button class="tab-btn" data-tab="posiciones">🏆 Tabla</button>
+</nav>
 
-<input id="jugadorNombre" placeholder="Nombre jugador">
-<button onclick="agregarJugador()">Agregar</button>
-
-<ul id="listaJugadores"></ul>
+<div id="contenido">
+  <div class="loading">Cargando datos del prode…</div>
 </div>
 
-<div class="card">
-<h2>Agregar Partido</h2>
-
-<input id="local" placeholder="Equipo Local">
-<input id="visitante" placeholder="Equipo Visitante">
-
-<button onclick="agregarPartido()">Agregar Partido</button>
-</div>
-
-<div class="card">
-<h2>Partidos</h2>
-<div id="partidos"></div>
-</div>
-
-<div class="card">
-<h2>Tabla de Posiciones</h2>
-
-<table class="posiciones">
-<thead>
-<tr>
-<th>Pos</th>
-<th>Jugador</th>
-<th>Puntos</th>
-</tr>
-</thead>
-<tbody id="tablaPosiciones"></tbody>
-</table>
-
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
+const FASES = ['Dieciseisavos de Final','Octavos de Final','Cuartos de Final','Semifinal','Tercer Puesto','Final'];
 
-let jugadores = JSON.parse(localStorage.getItem("jugadores")) || [];
-let partidos = JSON.parse(localStorage.getItem("partidos")) || [];
+const FLAGS = {
+  'Sudáfrica':'🇿🇦','Canadá':'🇨🇦','Brasil':'🇧🇷','Japón':'🇯🇵','Alemania':'🇩🇪','Paraguay':'🇵🇾',
+  'Países Bajos':'🇳🇱','Marruecos':'🇲🇦','Costa de Marfil':'🇨🇮','Noruega':'🇳🇴','Francia':'🇫🇷','Suecia':'🇸🇪',
+  'México':'🇲🇽','Ecuador':'🇪🇨','Inglaterra':'🏴','RD Congo':'🇨🇩','Bélgica':'🇧🇪','Senegal':'🇸🇳',
+  'Estados Unidos':'🇺🇸','Bosnia y Herzegovina':'🇧🇦','España':'🇪🇸','Austria':'🇦🇹','Portugal':'🇵🇹','Croacia':'🇭🇷',
+  'Suiza':'🇨🇭','Argelia':'🇩🇿','Australia':'🇦🇺','Egipto':'🇪🇬','Argentina':'🇦🇷','Cabo Verde':'🇨🇻',
+  'Colombia':'🇨🇴','Ghana':'🇬🇭'
+};
+function flag(team){ return FLAGS[team] || '🏳️'; }
 
-function guardar(){
-    localStorage.setItem("jugadores",JSON.stringify(jugadores));
-    localStorage.setItem("partidos",JSON.stringify(partidos));
+const DEFAULT_PARTIDOS = [
+  {id:'p1', fase:'Dieciseisavos de Final', equipoA:'Sudáfrica', equipoB:'Canadá', fecha:'2026-06-28', hora:'13:00', sede:'Los Ángeles', realA:null, realB:null},
+  {id:'p2', fase:'Dieciseisavos de Final', equipoA:'Brasil', equipoB:'Japón', fecha:'2026-06-29', hora:'11:00', sede:'Houston', realA:null, realB:null},
+  {id:'p3', fase:'Dieciseisavos de Final', equipoA:'Alemania', equipoB:'Paraguay', fecha:'2026-06-29', hora:'14:30', sede:'Boston', realA:null, realB:null},
+  {id:'p4', fase:'Dieciseisavos de Final', equipoA:'Países Bajos', equipoB:'Marruecos', fecha:'2026-06-29', hora:'19:00', sede:'Monterrey', realA:null, realB:null},
+  {id:'p5', fase:'Dieciseisavos de Final', equipoA:'Costa de Marfil', equipoB:'Noruega', fecha:'2026-06-30', hora:'', sede:'', realA:null, realB:null},
+  {id:'p6', fase:'Dieciseisavos de Final', equipoA:'Francia', equipoB:'Suecia', fecha:'2026-06-30', hora:'', sede:'', realA:null, realB:null},
+  {id:'p7', fase:'Dieciseisavos de Final', equipoA:'México', equipoB:'Ecuador', fecha:'2026-06-30', hora:'19:00', sede:'Ciudad de México', realA:null, realB:null},
+  {id:'p8', fase:'Dieciseisavos de Final', equipoA:'Inglaterra', equipoB:'RD Congo', fecha:'2026-07-01', hora:'10:00', sede:'Atlanta', realA:null, realB:null},
+  {id:'p9', fase:'Dieciseisavos de Final', equipoA:'Bélgica', equipoB:'Senegal', fecha:'2026-07-01', hora:'14:00', sede:'Seattle', realA:null, realB:null},
+  {id:'p10', fase:'Dieciseisavos de Final', equipoA:'Estados Unidos', equipoB:'Bosnia y Herzegovina', fecha:'2026-07-01', hora:'18:00', sede:'Bahía de San Francisco', realA:null, realB:null},
+  {id:'p11', fase:'Dieciseisavos de Final', equipoA:'España', equipoB:'Austria', fecha:'2026-07-02', hora:'13:00', sede:'Los Ángeles', realA:null, realB:null},
+  {id:'p12', fase:'Dieciseisavos de Final', equipoA:'Portugal', equipoB:'Croacia', fecha:'2026-07-02', hora:'17:00', sede:'Toronto', realA:null, realB:null},
+  {id:'p13', fase:'Dieciseisavos de Final', equipoA:'Suiza', equipoB:'Argelia', fecha:'2026-07-02', hora:'21:00', sede:'Vancouver', realA:null, realB:null},
+  {id:'p14', fase:'Dieciseisavos de Final', equipoA:'Australia', equipoB:'Egipto', fecha:'2026-07-03', hora:'12:00', sede:'Dallas', realA:null, realB:null},
+  {id:'p15', fase:'Dieciseisavos de Final', equipoA:'Argentina', equipoB:'Cabo Verde', fecha:'2026-07-03', hora:'16:00', sede:'Miami', realA:null, realB:null},
+  {id:'p16', fase:'Dieciseisavos de Final', equipoA:'Colombia', equipoB:'Ghana', fecha:'2026-07-03', hora:'19:30', sede:'Kansas City', realA:null, realB:null}
+];
+
+let jugadores = [];
+let partidos = [];
+let predicciones = {}; // {partidoId: {jugadorId: {a,b}}}
+let activeTab = 'jugadores';
+let jugadorSeleccionado = null;
+
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1400);
 }
 
-function agregarJugador(){
+async function cargarTodo(){
+  try{
+    const r = await window.storage.get('prode2026-jugadores', true);
+    jugadores = r ? JSON.parse(r.value) : [];
+  }catch(e){ jugadores = []; }
+  try{
+    const r = await window.storage.get('prode2026-partidos', true);
+    partidos = r ? JSON.parse(r.value) : null;
+  }catch(e){ partidos = null; }
+  if(!partidos || partidos.length === 0){
+    partidos = DEFAULT_PARTIDOS;
+    await guardarPartidos();
+  }
+  try{
+    const r = await window.storage.get('prode2026-predicciones', true);
+    predicciones = r ? JSON.parse(r.value) : {};
+  }catch(e){ predicciones = {}; }
 
-    let nombre = document.getElementById("jugadorNombre").value.trim();
-
-    if(!nombre) return;
-
-    jugadores.push({
-        nombre:nombre
-    });
-
-    document.getElementById("jugadorNombre").value="";
-
-    guardar();
-    render();
+  render();
 }
 
-function agregarPartido(){
-
-    let local = document.getElementById("local").value.trim();
-    let visitante = document.getElementById("visitante").value.trim();
-
-    if(!local || !visitante) return;
-
-    partidos.push({
-        local,
-        visitante,
-        gl:"",
-        gv:"",
-        pronosticos:{}
-    });
-
-    document.getElementById("local").value="";
-    document.getElementById("visitante").value="";
-
-    guardar();
-    render();
+async function guardarJugadores(){
+  try{ await window.storage.set('prode2026-jugadores', JSON.stringify(jugadores), true); }
+  catch(e){ toast('⚠️ No se pudo guardar'); }
+}
+async function guardarPartidos(){
+  try{ await window.storage.set('prode2026-partidos', JSON.stringify(partidos), true); }
+  catch(e){ toast('⚠️ No se pudo guardar'); }
+}
+async function guardarPredicciones(){
+  try{ await window.storage.set('prode2026-predicciones', JSON.stringify(predicciones), true); }
+  catch(e){ toast('⚠️ No se pudo guardar'); }
 }
 
-function calcularPuntos(pronGL,pronGV,realGL,realGV){
+function fechaLinda(fecha, hora){
+  if(!fecha) return '';
+  const d = new Date(fecha + 'T00:00:00');
+  const txt = d.toLocaleDateString('es-AR', {weekday:'short', day:'numeric', month:'short'});
+  return hora ? `${txt} · ${hora} hs` : txt;
+}
 
-    if(realGL==="" || realGV==="")
-        return 0;
-
-    pronGL = Number(pronGL);
-    pronGV = Number(pronGV);
-
-    realGL = Number(realGL);
-    realGV = Number(realGV);
-
-    if(pronGL===realGL && pronGV===realGV)
-        return 6;
-
-    let signoPron =
-        pronGL > pronGV ? "L" :
-        pronGL < pronGV ? "V" : "E";
-
-    let signoReal =
-        realGL > realGV ? "L" :
-        realGL < realGV ? "V" : "E";
-
-    return signoPron===signoReal ? 3 : 0;
+function calcularPuntos(predA, predB, realA, realB){
+  if(realA === null || realB === null || predA === undefined || predB === undefined) return null;
+  if(predA === realA && predB === realB) return 3;
+  const signoPred = Math.sign(predA - predB);
+  const signoReal = Math.sign(realA - realB);
+  if(signoPred === signoReal) return 1;
+  return 0;
 }
 
 function render(){
-
-    document.getElementById("listaJugadores").innerHTML =
-        jugadores.map(j=>`<li>${j.nombre}</li>`).join("");
-
-    let html="";
-
-    partidos.forEach((p,index)=>{
-
-        html += `
-        <div style="border:1px solid #ccc;padding:10px;margin-bottom:10px;">
-        <h3>${p.local} vs ${p.visitante}</h3>
-
-        Resultado Real:
-        <input type="number" value="${p.gl}" style="width:60px"
-        onchange="partidos[${index}].gl=this.value;guardar();render()">
-
-        -
-
-        <input type="number" value="${p.gv}" style="width:60px"
-        onchange="partidos[${index}].gv=this.value;guardar();render()">
-
-        <hr>
-        `;
-
-        jugadores.forEach(j=>{
-
-            let pr = p.pronosticos[j.nombre] || {gl:"",gv:""};
-
-            html += `
-            <div>
-            <strong>${j.nombre}</strong>
-
-            <input type="number" value="${pr.gl}"
-            style="width:60px"
-            onchange="
-            if(!partidos[${index}].pronosticos['${j.nombre}'])
-            partidos[${index}].pronosticos['${j.nombre}']={};
-
-            partidos[${index}].pronosticos['${j.nombre}'].gl=this.value;
-            guardar();render();
-            ">
-
-            -
-
-            <input type="number" value="${pr.gv}"
-            style="width:60px"
-            onchange="
-            if(!partidos[${index}].pronosticos['${j.nombre}'])
-            partidos[${index}].pronosticos['${j.nombre}']={};
-
-            partidos[${index}].pronosticos['${j.nombre}'].gv=this.value;
-            guardar();render();
-            ">
-
-            Puntos:
-            ${
-                calcularPuntos(
-                    pr.gl,
-                    pr.gv,
-                    p.gl,
-                    p.gv
-                )
-            }
-            </div>
-            `;
-        });
-
-        html += "</div>";
-    });
-
-    document.getElementById("partidos").innerHTML = html;
-
-    let ranking = jugadores.map(j=>{
-
-        let total = 0;
-
-        partidos.forEach(p=>{
-
-            let pr = p.pronosticos[j.nombre];
-
-            if(pr){
-
-                total += calcularPuntos(
-                    pr.gl,
-                    pr.gv,
-                    p.gl,
-                    p.gv
-                );
-            }
-        });
-
-        return {
-            nombre:j.nombre,
-            puntos:total
-        };
-    });
-
-    ranking.sort((a,b)=>b.puntos-a.puntos);
-
-    document.getElementById("tablaPosiciones").innerHTML =
-    ranking.map((j,i)=>`
-    <tr>
-        <td>${i+1}</td>
-        <td>${j.nombre}</td>
-        <td>${j.puntos}</td>
-    </tr>
-    `).join("");
+  const c = document.getElementById('contenido');
+  c.innerHTML = `
+    <div class="tab ${activeTab==='jugadores'?'active':''}" id="tab-jugadores">${renderJugadores()}</div>
+    <div class="tab ${activeTab==='partidos'?'active':''}" id="tab-partidos">${renderPartidos()}</div>
+    <div class="tab ${activeTab==='predicciones'?'active':''}" id="tab-predicciones">${renderPredicciones()}</div>
+    <div class="tab ${activeTab==='posiciones'?'active':''}" id="tab-posiciones">${renderPosiciones()}</div>
+  `;
+  bindEvents();
 }
 
-render();
+function renderJugadores(){
+  let lista = jugadores.length ? jugadores.map(j => `
+    <div class="jugador-item">
+      <span>👤 ${escapeHtml(j.nombre)}</span>
+      <button class="quitar" data-quitar-jugador="${j.id}">✕</button>
+    </div>`).join('') : '<p class="vacio">Todavía no agregaste jugadores.</p>';
 
+  return `
+    <div class="card">
+      <h2>👥 Jugadores</h2>
+      <div class="fila-form">
+        <input id="inputJugador" placeholder="Nombre del jugador" maxlength="30">
+        <button class="btn" id="btnAgregarJugador">Agregar</button>
+      </div>
+      ${lista}
+    </div>`;
+}
+
+function partidoCard(p, modo){
+  const tieneResultado = p.realA !== null && p.realB !== null;
+  const fasesClass = tieneResultado ? 'finalizado' : '';
+  let cuerpo = '';
+
+  if(modo === 'admin'){
+    cuerpo = tieneResultado ? `
+      <div class="resultado-real">${p.realA} - ${p.realB}</div>
+      <div class="acciones-partido">
+        <button class="btn chico" data-editar-resultado="${p.id}">✏️ Editar</button>
+        <button class="btn chico rojo" data-borrar-partido="${p.id}">🗑️ Borrar partido</button>
+      </div>` : `
+      <div class="resultado-input">
+        <input type="number" min="0" placeholder="0" id="realA-${p.id}">
+        <span class="vs">–</span>
+        <input type="number" min="0" placeholder="0" id="realB-${p.id}">
+        <button class="btn chico dorado" data-guardar-resultado="${p.id}">Cargar resultado</button>
+      </div>
+      <div class="acciones-partido">
+        <button class="btn chico rojo" data-borrar-partido="${p.id}">🗑️ Borrar partido</button>
+      </div>`;
+  } else {
+    if(!jugadorSeleccionado){
+      cuerpo = '<p class="pred-locked">Elegí tu nombre arriba para predecir.</p>';
+    } else if(tieneResultado){
+      const pred = (predicciones[p.id] && predicciones[p.id][jugadorSeleccionado]) || null;
+      const pts = pred ? calcularPuntos(pred.a, pred.b, p.realA, p.realB) : null;
+      const tagClass = pts === 3 ? 'p3' : pts === 1 ? 'p1' : 'p0';
+      cuerpo = `
+        <div class="resultado-real">${p.realA} - ${p.realB}</div>
+        <div class="pred-locked">
+          ${pred ? `Predijiste ${pred.a}-${pred.b}` : 'No predijiste este partido'}
+          ${pred ? `<span class="pts-tag ${tagClass}">${pts} pt${pts===1?'':'s'}</span>` : ''}
+        </div>`;
+    } else {
+      const pred = (predicciones[p.id] && predicciones[p.id][jugadorSeleccionado]) || {a:'', b:''};
+      cuerpo = `
+        <div class="resultado-input">
+          <input type="number" min="0" placeholder="0" value="${pred.a}" id="predA-${p.id}">
+          <span class="vs">–</span>
+          <input type="number" min="0" placeholder="0" value="${pred.b}" id="predB-${p.id}">
+          <button class="btn chico" data-guardar-prediccion="${p.id}">Guardar</button>
+        </div>`;
+    }
+  }
+
+  return `
+    <div class="partido ${fasesClass}">
+      <div class="partido-top">
+        <span>${fechaLinda(p.fecha,p.hora)}${p.sede ? ' · '+escapeHtml(p.sede):''}</span>
+        <span class="estado ${tieneResultado?'finalizado':'pendiente'}">${tieneResultado?'FINALIZADO':'PENDIENTE'}</span>
+      </div>
+      <div class="equipos">
+        <span>${flag(p.equipoA)} ${escapeHtml(p.equipoA)}</span>
+        <span class="vs">vs</span>
+        <span>${escapeHtml(p.equipoB)} ${flag(p.equipoB)}</span>
+      </div>
+      ${cuerpo}
+    </div>`;
+}
+
+function agruparPorFase(lista){
+  const grupos = {};
+  FASES.forEach(f => grupos[f] = []);
+  lista.forEach(p => { if(!grupos[p.fase]) grupos[p.fase] = []; grupos[p.fase].push(p); });
+  return grupos;
+}
+
+function renderPartidos(){
+  const grupos = agruparPorFase(partidos);
+  let bloques = Object.keys(grupos).filter(f => grupos[f].length).map(f => `
+    <details class="fase-group" ${f==='Dieciseisavos de Final'?'open':''}>
+      <summary>${f} (${grupos[f].length})</summary>
+      <div class="fase-body">${grupos[f].map(p => partidoCard(p,'admin')).join('')}</div>
+    </details>`).join('');
+
+  return `
+    <div class="card">
+      <h2>⚽ Partidos</h2>
+      ${bloques || '<p class="vacio">No hay partidos cargados.</p>'}
+    </div>
+    <div class="card">
+      <h2>➕ Agregar partido</h2>
+      <div class="fila-form">
+        <select id="nuevaFase">${FASES.map(f=>`<option>${f}</option>`).join('')}</select>
+      </div>
+      <div class="fila-form">
+        <input id="nuevoEquipoA" placeholder="Equipo A">
+        <input id="nuevoEquipoB" placeholder="Equipo B">
+      </div>
+      <div class="fila-form">
+        <input type="date" id="nuevaFecha">
+        <input type="time" id="nuevaHora">
+        <input id="nuevaSede" placeholder="Sede (opcional)">
+      </div>
+      <button class="btn dorado" id="btnAgregarPartido">Agregar partido</button>
+    </div>`;
+}
+
+function renderPredicciones(){
+  if(!jugadores.length){
+    return `<div class="card"><h2>🎯 Predicciones</h2><p class="vacio">Agregá jugadores primero en la pestaña 👥 Jugadores.</p></div>`;
+  }
+  const grupos = agruparPorFase(partidos);
+  let bloques = Object.keys(grupos).filter(f => grupos[f].length).map(f => `
+    <details class="fase-group" ${f==='Dieciseisavos de Final'?'open':''}>
+      <summary>${f} (${grupos[f].length})</summary>
+      <div class="fase-body">${grupos[f].map(p => partidoCard(p,'jugador')).join('')}</div>
+    </details>`).join('');
+
+  return `
+    <div class="card">
+      <h2>🎯 Predicciones</h2>
+      <select id="selJugadorPred">
+        <option value="">— Elegí tu nombre —</option>
+        ${jugadores.map(j=>`<option value="${j.id}" ${jugadorSeleccionado===j.id?'selected':''}>${escapeHtml(j.nombre)}</option>`).join('')}
+      </select>
+      ${bloques}
+    </div>
+    <div class="card">
+      <p class="reglas">🎯 <b>3 puntos</b> por acertar el resultado exacto.<br>✅ <b>1 punto</b> por acertar quién gana (o el empate) sin el marcador justo.<br>❌ <b>0 puntos</b> si no acertás ni el resultado.</p>
+    </div>`;
+}
+
+function renderPosiciones(){
+  if(!jugadores.length){
+    return `<div class="card"><h2>🏆 Tabla de posiciones</h2><p class="vacio">Agregá jugadores para ver la tabla.</p></div>`;
+  }
+  const filas = jugadores.map(j => {
+    let pts = 0, exactos = 0, jugados = 0;
+    partidos.forEach(p => {
+      if(p.realA === null || p.realB === null) return;
+      const pred = predicciones[p.id] && predicciones[p.id][j.id];
+      if(!pred) return;
+      jugados++;
+      const r = calcularPuntos(pred.a, pred.b, p.realA, p.realB);
+      if(r === 3) exactos++;
+      pts += r;
+    });
+    return {nombre:j.nombre, pts, exactos, jugados};
+  }).sort((a,b) => b.pts - a.pts || b.exactos - a.exactos);
+
+  const filasHtml = filas.map((f,i) => `
+    <tr class="${i===0 && f.pts>0 ? 'puesto1':''}">
+      <td>${i+1}${i===0 && f.pts>0 ? ' 🥇':''}</td>
+      <td style="text-align:left">${escapeHtml(f.nombre)}</td>
+      <td>${f.jugados}</td>
+      <td>${f.exactos}</td>
+      <td>${f.pts}</td>
+    </tr>`).join('');
+
+  return `
+    <div class="card">
+      <h2>🏆 Tabla de posiciones</h2>
+      <table class="posiciones">
+        <thead><tr><th>#</th><th style="text-align:left">Jugador</th><th>PJ</th><th>Exactos</th><th>Pts</th></tr></thead>
+        <tbody>${filasHtml}</tbody>
+      </table>
+    </div>`;
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function bindEvents(){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.onclick = () => {
+      activeTab = btn.dataset.tab;
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      render();
+    };
+  });
+
+  const btnAddJug = document.getElementById('btnAgregarJugador');
+  if(btnAddJug) btnAddJug.onclick = async () => {
+    const input = document.getElementById('inputJugador');
+    const nombre = input.value.trim();
+    if(!nombre) return;
+    jugadores.push({id:uid(), nombre});
+    await guardarJugadores();
+    toast('Jugador agregado ✅');
+    render();
+  };
+  document.querySelectorAll('[data-quitar-jugador]').forEach(b=>{
+    b.onclick = async () => {
+      const id = b.dataset.quitarJugador;
+      if(!confirm('¿Quitar a este jugador y sus predicciones?')) return;
+      jugadores = jugadores.filter(j=>j.id!==id);
+      Object.keys(predicciones).forEach(pid => { if(predicciones[pid]) delete predicciones[pid][id]; });
+      await guardarJugadores(); await guardarPredicciones();
+      if(jugadorSeleccionado === id) jugadorSeleccionado = null;
+      render();
+    };
+  });
+
+  const btnAddPartido = document.getElementById('btnAgregarPartido');
+  if(btnAddPartido) btnAddPartido.onclick = async () => {
+    const fase = document.getElementById('nuevaFase').value;
+    const equipoA = document.getElementById('nuevoEquipoA').value.trim();
+    const equipoB = document.getElementById('nuevoEquipoB').value.trim();
+    const fecha = document.getElementById('nuevaFecha').value;
+    const hora = document.getElementById('nuevaHora').value;
+    const sede = document.getElementById('nuevaSede').value.trim();
+    if(!equipoA || !equipoB){ toast('Falta el nombre de algún equipo'); return; }
+    partidos.push({id:uid(), fase, equipoA, equipoB, fecha, hora, sede, realA:null, realB:null});
+    await guardarPartidos();
+    toast('Partido agregado ⚽');
+    render();
+  };
+  document.querySelectorAll('[data-borrar-partido]').forEach(b=>{
+    b.onclick = async () => {
+      const id = b.dataset.borrarPartido;
+      if(!confirm('¿Borrar este partido y sus predicciones?')) return;
+      partidos = partidos.filter(p=>p.id!==id);
+      delete predicciones[id];
+      await guardarPartidos(); await guardarPredicciones();
+      render();
+    };
+  });
+  document.querySelectorAll('[data-guardar-resultado]').forEach(b=>{
+    b.onclick = async () => {
+      const id = b.dataset.guardarResultado;
+      const a = document.getElementById('realA-'+id).value;
+      const bVal = document.getElementById('realB-'+id).value;
+      if(a==='' || bVal===''){ toast('Completá los dos marcadores'); return; }
+      const p = partidos.find(p=>p.id===id);
+      p.realA = parseInt(a); p.realB = parseInt(bVal);
+      await guardarPartidos();
+      toast('Resultado cargado 🏁');
+      render();
+    };
+  });
+  document.querySelectorAll('[data-editar-resultado]').forEach(b=>{
+    b.onclick = async () => {
+      const id = b.dataset.editarResultado;
+      const p = partidos.find(p=>p.id===id);
+      p.realA = null; p.realB = null;
+      await guardarPartidos();
+      render();
+    };
+  });
+  document.querySelectorAll('[data-guardar-prediccion]').forEach(b=>{
+    b.onclick = async () => {
+      const id = b.dataset.guardarPrediccion;
+      const a = document.getElementById('predA-'+id).value;
+      const bVal = document.getElementById('predB-'+id).value;
+      if(a==='' || bVal===''){ toast('Completá los dos marcadores'); return; }
+      if(!predicciones[id]) predicciones[id] = {};
+      predicciones[id][jugadorSeleccionado] = {a:parseInt(a), b:parseInt(bVal)};
+      await guardarPredicciones();
+      toast('Predicción guardada 🎯');
+      render();
+    };
+  });
+  const selJug = document.getElementById('selJugadorPred');
+  if(selJug) selJug.onchange = () => { jugadorSeleccionado = selJug.value || null; render(); };
+}
+
+cargarTodo();
 </script>
-
 </body>
 </html>
