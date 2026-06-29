@@ -187,7 +187,7 @@
   <h1>🏆 PRODE MUNDIAL 2026</h1>
   <p>Predicciones en familia · Dieciseisavos en adelante</p>
 </header>
-<p class="nota-share">⚠️ Los datos de este prode se guardan compartidos: cualquiera con el link los ve y puede editarlos.</p>
+<p class="nota-share">📱 Los datos se guardan en este celu/navegador.</p>
 
 <nav>
   <button class="tab-btn active" data-tab="jugadores">👥 Jugadores</button>
@@ -251,35 +251,35 @@ function toast(msg){
 
 async function cargarTodo(){
   try{
-    const r = await window.storage.get('prode2026-jugadores', true);
-    jugadores = r ? JSON.parse(r.value) : [];
+    const data = localStorage.getItem('prode2026-jugadores');
+    jugadores = data ? JSON.parse(data) : [];
   }catch(e){ jugadores = []; }
   try{
-    const r = await window.storage.get('prode2026-partidos', true);
-    partidos = r ? JSON.parse(r.value) : null;
+    const data = localStorage.getItem('prode2026-partidos');
+    partidos = data ? JSON.parse(data) : null;
   }catch(e){ partidos = null; }
   if(!partidos || partidos.length === 0){
     partidos = DEFAULT_PARTIDOS;
     await guardarPartidos();
   }
   try{
-    const r = await window.storage.get('prode2026-predicciones', true);
-    predicciones = r ? JSON.parse(r.value) : {};
+    const data = localStorage.getItem('prode2026-predicciones');
+    predicciones = data ? JSON.parse(data) : {};
   }catch(e){ predicciones = {}; }
 
   render();
 }
 
 async function guardarJugadores(){
-  try{ await window.storage.set('prode2026-jugadores', JSON.stringify(jugadores), true); }
+  try{ localStorage.setItem('prode2026-jugadores', JSON.stringify(jugadores)); }
   catch(e){ toast('⚠️ No se pudo guardar'); }
 }
 async function guardarPartidos(){
-  try{ await window.storage.set('prode2026-partidos', JSON.stringify(partidos), true); }
+  try{ localStorage.setItem('prode2026-partidos', JSON.stringify(partidos)); }
   catch(e){ toast('⚠️ No se pudo guardar'); }
 }
 async function guardarPredicciones(){
-  try{ await window.storage.set('prode2026-predicciones', JSON.stringify(predicciones), true); }
+  try{ localStorage.setItem('prode2026-predicciones', JSON.stringify(predicciones)); }
   catch(e){ toast('⚠️ No se pudo guardar'); }
 }
 
