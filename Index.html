@@ -154,6 +154,11 @@
   .resultado-real{
     text-align:center;font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--verde-cancha);margin:4px 0;
   }
+  .resultado-real.pendiente{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--texto-claro);}
+  .grid-predicciones{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+  .pred-casillero{display:flex;align-items:center;justify-content:space-between;background:var(--crema);border-radius:8px;padding:7px 10px;font-size:13px;gap:6px;}
+  .pred-casillero .pred-nombre{font-weight:600;flex:1;}
+  .pred-casillero .pred-valor{font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--verde-cancha);min-width:36px;text-align:center;}
   .acciones-partido{display:flex;justify-content:center;gap:8px;margin-top:8px;}
   .pred-locked{text-align:center;font-size:12px;color:var(--texto-claro);margin-top:6px;}
   .pts-tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:6px;}
@@ -193,6 +198,7 @@
   <button class="tab-btn active" data-tab="jugadores">👥 Jugadores</button>
   <button class="tab-btn" data-tab="partidos">⚽ Partidos</button>
   <button class="tab-btn" data-tab="predicciones">🎯 Predicciones</button>
+  <button class="tab-btn" data-tab="porpartido">📋 Por Partido</button>
   <button class="tab-btn" data-tab="posiciones">🏆 Tabla</button>
 </nav>
 
@@ -305,6 +311,7 @@ function render(){
     <div class="tab ${activeTab==='jugadores'?'active':''}" id="tab-jugadores">${renderJugadores()}</div>
     <div class="tab ${activeTab==='partidos'?'active':''}" id="tab-partidos">${renderPartidos()}</div>
     <div class="tab ${activeTab==='predicciones'?'active':''}" id="tab-predicciones">${renderPredicciones()}</div>
+    <div class="tab ${activeTab==='porpartido'?'active':''}" id="tab-porpartido">${renderPorPartido()}</div>
     <div class="tab ${activeTab==='posiciones'?'active':''}" id="tab-posiciones">${renderPosiciones()}</div>
   `;
   bindEvents();
@@ -452,6 +459,51 @@ function renderPredicciones(){
     </div>`;
 }
 
+function porPartidoCard(p){
+  const tieneResultado = p.realA !== null && p.realB !== null;
+  const casilleros = jugadores.length ? jugadores.map(j => {
+    const pred = predicciones[p.id] && predicciones[p.id][j.id];
+    const pts = (tieneResultado && pred) ? calcularPuntos(pred.a, pred.b, p.realA, p.realB) : null;
+    const tagClass = pts === 6 ? 'p3' : pts === 3 ? 'p1' : 'p0';
+    return `
+      <div class="pred-casillero">
+        <span class="pred-nombre">👤 ${escapeHtml(j.nombre)}</span>
+        <span class="pred-valor">${pred ? pred.a+' - '+pred.b : '—'}</span>
+        ${pts !== null ? `<span class="pts-tag ${tagClass}">${pts} pts</span>` : ''}
+      </div>`;
+  }).join('') : '<p class="vacio">Todavía no hay jugadores cargados.</p>';
+
+  return `
+    <div class="partido ${tieneResultado?'finalizado':''}">
+      <div class="partido-top">
+        <span>${fechaLinda(p.fecha,p.hora)}${p.sede ? ' · '+escapeHtml(p.sede):''}</span>
+        <span class="estado ${tieneResultado?'finalizado':'pendiente'}">${tieneResultado?'FINALIZADO':'PENDIENTE'}</span>
+      </div>
+      <div class="equipos">
+        <span>${flag(p.equipoA)} ${escapeHtml(p.equipoA)}</span>
+        <span class="vs">vs</span>
+        <span>${escapeHtml(p.equipoB)} ${flag(p.equipoB)}</span>
+      </div>
+      <div class="resultado-real ${tieneResultado?'':'pendiente'}">${tieneResultado ? p.realA+' - '+p.realB : 'Resultado real: pendiente'}</div>
+      <div class="grid-predicciones">${casilleros}</div>
+    </div>`;
+}
+
+function renderPorPartido(){
+  const grupos = agruparPorFase(partidos);
+  let bloques = Object.keys(grupos).filter(f => grupos[f].length).map(f => `
+    <details class="fase-group" ${f==='Dieciseisavos de Final'?'open':''}>
+      <summary>${f} (${grupos[f].length})</summary>
+      <div class="fase-body">${grupos[f].map(p => porPartidoCard(p)).join('')}</div>
+    </details>`).join('');
+
+  return `
+    <div class="card">
+      <h2>📋 Predicciones por Partido</h2>
+      ${bloques || '<p class="vacio">No hay partidos cargados.</p>'}
+    </div>`;
+}
+
 function renderPosiciones(){
   if(!jugadores.length){
     return `<div class="card"><h2>🏆 Tabla de posiciones</h2><p class="vacio">Agregá jugadores para ver la tabla.</p></div>`;
@@ -591,3 +643,4 @@ cargarTodo();
 </script>
 </body>
 </html>
+
